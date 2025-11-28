@@ -2,7 +2,7 @@
 <html lang="es" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SrWeb - Propuesta Comercial</title>
     
     <!-- 1. Tailwind CSS (CDN) -->
@@ -14,13 +14,13 @@
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Poppins', 'sans-serif'] }, // Tipografía Poppins
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
                     colors: {
-                        bg: '#020617',      // Midnight
-                        surface: '#0f172a', // Slate 900
-                        primary: '#2563eb', // Azul Real
-                        secondary: '#06b6d4', // Cyan
-                        toyota: '#EB0A1E',  // Rojo Toyota
+                        bg: '#020617',      
+                        surface: '#0f172a', 
+                        primary: '#2563eb', 
+                        secondary: '#06b6d4', 
+                        toyota: '#EB0A1E',
                     },
                     animation: {
                         'float': 'float 6s ease-in-out infinite',
@@ -47,7 +47,7 @@
         }
     </script>
 
-    <!-- 3. Fuentes e Iconos (Poppins) -->
+    <!-- 3. Fuentes e Iconos -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -58,11 +58,16 @@
             color: white; 
             overflow: hidden; 
             transition: background-color 0.7s ease-in-out;
+            /* FIX MOBILE: Desactiva gestos del navegador para que el JS controle el swipe */
+            touch-action: none;
+            overscroll-behavior: none;
         }
         
         .slide {
             display: none;
+            /* FIX MOBILE: Altura dinámica real para móviles */
             height: 100vh;
+            height: 100dvh; 
             width: 100vw;
             flex-direction: column;
             align-items: center;
@@ -103,10 +108,10 @@
     </div>
 
     <!-- CONTENEDOR DE SLIDES -->
-    <main class="relative w-full h-screen">
+    <main class="relative w-full h-screen h-[100dvh]" id="main-container">
         <div class="absolute inset-0 bg-spotlight pointer-events-none z-0"></div>
 
-        <!-- SLIDE 1: INTRO (TÍTULO COMERCIAL) -->
+        <!-- SLIDE 1: INTRO -->
         <section class="slide active" data-bg="bg-[#020617]" data-title="Intro">
             <div class="relative z-10 text-center space-y-8 animate-fade-in">
                 <!-- Icono Flotante -->
@@ -132,6 +137,16 @@
                     <span>Estrategia</span>
                     <span class="text-blue-500">•</span>
                     <span>Ventas</span>
+                </div>
+                
+                <!-- Indicador de Swipe -->
+                <div class="md:hidden pt-12 animate-pulse text-gray-500 text-xs flex flex-col items-center">
+                    <div class="flex gap-2">
+                        <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                        <i data-lucide="hand-metal" class="w-5 h-5 mb-1"></i>
+                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </div>
+                    Desliza para ver más
                 </div>
             </div>
         </section>
@@ -408,7 +423,7 @@
             </div>
         </section>
 
-        <!-- SLIDE 7: CRONOGRAMA DE TRABAJO (NUEVO) -->
+        <!-- SLIDE 7: CRONOGRAMA DE TRABAJO -->
         <section class="slide" data-bg="bg-[#0b1221]" data-title="Plan de Trabajo">
             <div class="max-w-5xl w-full text-center space-y-12 animate-slide-up">
                 <div class="mb-8">
@@ -556,7 +571,7 @@
         </section>
 
         <!-- CONTROLES -->
-        <div class="absolute bottom-8 right-8 flex space-x-4 z-50">
+        <div class="absolute bottom-8 right-8 hidden md:flex space-x-4 z-50">
             <button onclick="prevSlide()" class="p-3 rounded-full bg-[#0f172a] hover:bg-white/10 text-white transition-colors border border-white/10 backdrop-blur-sm group">
                 <i data-lucide="chevron-left" class="w-6 h-6"></i>
             </button>
@@ -625,6 +640,31 @@
             if (e.key === 'ArrowRight') nextSlide();
             if (e.key === 'ArrowLeft') prevSlide();
         });
+
+        // Touch events for mobile swipe
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        const mainContainer = document.getElementById('main-container');
+
+        mainContainer.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, {passive: false}); // passive: false permite preventDefault si fuera necesario, aunque touch-action: none ya maneja esto.
+
+        mainContainer.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, {passive: false});
+
+        function handleSwipe() {
+            const threshold = 30; // Umbral reducido para mejor respuesta
+            if (touchEndX < touchStartX - threshold) {
+                nextSlide();
+            }
+            if (touchEndX > touchStartX + threshold) {
+                prevSlide();
+            }
+        }
 
         // Iniciar
         updateSlide();
