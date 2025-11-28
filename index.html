@@ -58,23 +58,34 @@
             color: white; 
             overflow: hidden; 
             transition: background-color 0.7s ease-in-out;
-            /* FIX MOBILE: Desactiva gestos del navegador para que el JS controle el swipe */
+            /* Bloquea el scroll nativo para que el JS controle 100% el swipe */
             touch-action: none;
             overscroll-behavior: none;
         }
         
         .slide {
             display: none;
-            /* FIX MOBILE: Altura dinámica real para móviles */
-            height: 100vh;
-            height: 100dvh; 
+            height: 100dvh; /* Altura dinámica para móviles */
             width: 100vw;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            /* IMPORTANTE: justify-start en móvil para respetar el padding-top */
+            justify-content: start; 
             padding: 1.5rem;
+            /* Padding top extra grande para librar el logo fijo */
+            padding-top: 6rem; 
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
+            overflow-y: auto; /* Permite scroll interno si el contenido es muy alto */
+        }
+
+        /* En pantallas grandes (md), centramos verticalmente */
+        @media (min-width: 768px) {
+            .slide {
+                justify-content: center;
+                padding-top: 1.5rem;
+                overflow-y: hidden;
+            }
         }
 
         .slide.active {
@@ -97,41 +108,42 @@
 <body id="body-bg" class="bg-[#020617]">
 
     <!-- NAVBAR FIJO -->
-    <div class="absolute top-0 w-full p-6 flex justify-between items-center z-50 bg-gradient-to-b from-[#020617]/90 to-transparent">
-        <div class="font-bold text-2xl tracking-tighter flex items-center gap-2">
+    <div class="absolute top-0 w-full p-4 md:p-6 flex justify-between items-center z-50 bg-gradient-to-b from-[#020617] via-[#020617]/90 to-transparent">
+        <div class="font-bold text-xl md:text-2xl tracking-tighter flex items-center gap-2">
             <!-- LOGO SRWEB -->
-            <img src="logo-srweb.webp" alt="SrWeb" class="h-10 w-auto object-contain filter drop-shadow-lg">
+            <img src="logo-srweb.webp" alt="SrWeb" class="h-8 md:h-10 w-auto object-contain filter drop-shadow-lg">
         </div>
-        <div class="text-xs md:text-sm text-gray-400 uppercase tracking-widest hidden md:block font-medium" id="header-subtitle">
+        <div class="text-[10px] md:text-sm text-gray-400 uppercase tracking-widest hidden md:block font-medium" id="header-subtitle">
             Propuesta Comercial - Musalem Toyota
         </div>
     </div>
 
     <!-- CONTENEDOR DE SLIDES -->
-    <main class="relative w-full h-screen h-[100dvh]" id="main-container">
+    <main class="relative w-full h-full" id="main-container">
         <div class="absolute inset-0 bg-spotlight pointer-events-none z-0"></div>
 
         <!-- SLIDE 1: INTRO -->
         <section class="slide active" data-bg="bg-[#020617]" data-title="Intro">
-            <div class="relative z-10 text-center space-y-8 animate-fade-in">
+            <!-- Centrado vertical forzado solo para la portada -->
+            <div class="flex flex-col justify-center h-full w-full relative z-10 text-center space-y-6 md:space-y-8 animate-fade-in">
                 <!-- Icono Flotante -->
-                <div class="relative inline-block animate-float">
+                <div class="relative inline-block animate-float mx-auto">
                     <div class="absolute -inset-4 bg-blue-500/20 rounded-full blur-xl"></div>
-                    <div class="relative bg-[#0f172a] p-6 rounded-2xl border border-white/10 shadow-[0_0_40px_rgba(37,99,235,0.4)]">
-                        <i data-lucide="briefcase" class="w-16 h-16 text-blue-500"></i>
+                    <div class="relative bg-[#0f172a] p-5 md:p-6 rounded-2xl border border-white/10 shadow-[0_0_40px_rgba(37,99,235,0.4)]">
+                        <i data-lucide="briefcase" class="w-12 h-12 md:w-16 md:h-16 text-blue-500"></i>
                     </div>
                 </div>
 
-                <h1 class="text-5xl md:text-7xl font-bold text-white tracking-tight leading-tight">
+                <h1 class="text-4xl md:text-7xl font-bold text-white tracking-tight leading-tight">
                     Propuesta <br>
                     <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-400">Comercial</span>
                 </h1>
                 
-                <p class="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto font-light">
-                    Desarrollo Web Profesional para <span class="text-white font-semibold">Musalem - Toyota</span>.
+                <p class="text-lg md:text-2xl text-gray-400 max-w-2xl mx-auto font-light px-4">
+                    Desarrollo Web Profesional para <br><span class="text-white font-semibold">Musalem - Toyota</span>.
                 </p>
                 
-                <div class="mt-12 flex items-center justify-center space-x-3 text-xs md:text-sm text-blue-300/80 uppercase tracking-[0.2em] border-t border-white/10 pt-6">
+                <div class="mt-8 md:mt-12 flex flex-wrap justify-center gap-3 text-xs md:text-sm text-blue-300/80 uppercase tracking-[0.2em] border-t border-white/10 pt-6 mx-auto max-w-xs md:max-w-none">
                     <span>Desarrollo</span>
                     <span class="text-blue-500">•</span>
                     <span>Estrategia</span>
@@ -140,10 +152,10 @@
                 </div>
                 
                 <!-- Indicador de Swipe -->
-                <div class="md:hidden pt-12 animate-pulse text-gray-500 text-xs flex flex-col items-center">
-                    <div class="flex gap-2">
+                <div class="md:hidden pt-8 animate-pulse text-gray-500 text-xs flex flex-col items-center">
+                    <div class="flex gap-2 mb-1">
                         <i data-lucide="chevron-left" class="w-4 h-4"></i>
-                        <i data-lucide="hand-metal" class="w-5 h-5 mb-1"></i>
+                        <i data-lucide="hand-metal" class="w-5 h-5"></i>
                         <i data-lucide="chevron-right" class="w-4 h-4"></i>
                     </div>
                     Desliza para ver más
@@ -153,50 +165,52 @@
 
         <!-- SLIDE 2: ADN -->
         <section class="slide" data-bg="bg-[#0b1221]" data-title="Nuestro ADN">
-            <div class="max-w-6xl w-full grid md:grid-cols-2 gap-12 items-center">
-                <div class="space-y-8 text-left">
-                    <h2 class="text-4xl md:text-5xl font-bold text-white leading-tight">
+            <div class="max-w-6xl w-full grid md:grid-cols-2 gap-6 md:gap-12 items-center h-full md:h-auto justify-center">
+                <div class="space-y-6 md:space-y-8 text-left">
+                    <h2 class="text-3xl md:text-5xl font-bold text-white leading-tight">
                         ¿Por qué <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">SRWeb</span>?
                     </h2>
-                    <p class="text-gray-400 text-lg leading-relaxed font-light">
+                    <p class="text-gray-400 text-sm md:text-lg leading-relaxed font-light">
                         Transformamos ideas en activos digitales. Para Camal Musalem, esto significa dejar de tener un "sitio catálogo" y pasar a tener una <strong>plataforma de conversión</strong> operativa 24/7.
                     </p>
-                    <div class="space-y-4">
-                        <div class="flex items-center bg-[#0f172a]/80 p-5 rounded-xl border border-white/5 hover:border-blue-500/30 transition-colors">
-                            <div class="bg-blue-500/20 p-3 rounded-lg mr-4">
-                                <i data-lucide="target" class="text-blue-400 w-6 h-6"></i>
+                    <div class="space-y-3 md:space-y-4">
+                        <div class="flex items-center bg-[#0f172a]/80 p-4 rounded-xl border border-white/5 hover:border-blue-500/30 transition-colors">
+                            <div class="bg-blue-500/20 p-2 md:p-3 rounded-lg mr-4">
+                                <i data-lucide="target" class="text-blue-400 w-5 h-5 md:w-6 md:h-6"></i>
                             </div>
                             <div>
-                                <h4 class="text-white font-bold">Enfoque en Ventas</h4>
-                                <p class="text-sm text-gray-400">Estructura SEO-Friendly optimizada para cerrar negocios.</p>
+                                <h4 class="text-white font-bold text-sm md:text-base">Enfoque en Ventas</h4>
+                                <p class="text-xs md:text-sm text-gray-400">Estructura SEO-Friendly optimizada para cerrar negocios.</p>
                             </div>
                         </div>
-                        <div class="flex items-center bg-[#0f172a]/80 p-5 rounded-xl border border-white/5 hover:border-cyan-500/30 transition-colors">
-                            <div class="bg-cyan-500/20 p-3 rounded-lg mr-4">
-                                <i data-lucide="smartphone" class="text-cyan-400 w-6 h-6"></i>
+                        <div class="flex items-center bg-[#0f172a]/80 p-4 rounded-xl border border-white/5 hover:border-cyan-500/30 transition-colors">
+                            <div class="bg-cyan-500/20 p-2 md:p-3 rounded-lg mr-4">
+                                <i data-lucide="smartphone" class="text-cyan-400 w-5 h-5 md:w-6 md:h-6"></i>
                             </div>
                             <div>
-                                <h4 class="text-white font-bold">Mobile First</h4>
-                                <p class="text-sm text-gray-400">Adaptabilidad total donde ocurre el 80% de la búsqueda.</p>
+                                <h4 class="text-white font-bold text-sm md:text-base">Mobile First</h4>
+                                <p class="text-xs md:text-sm text-gray-400">Adaptabilidad total donde ocurre el 80% de la búsqueda.</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="relative grid grid-cols-2 gap-4">
-                    <div class="bg-[#0f172a] p-8 rounded-2xl border border-white/10 text-center hover:shadow-[0_0_30px_rgba(37,99,235,0.2)] transition-all">
-                        <div class="text-4xl font-bold text-white mb-2">+10</div>
-                        <div class="text-xs text-blue-400 uppercase tracking-widest font-bold">Años Exp.</div>
+                
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-2 gap-3 md:gap-4 w-full">
+                    <div class="bg-[#0f172a] p-4 md:p-8 rounded-2xl border border-white/10 text-center">
+                        <div class="text-2xl md:text-4xl font-bold text-white mb-1 md:mb-2">+10</div>
+                        <div class="text-[10px] md:text-xs text-blue-400 uppercase tracking-widest font-bold">Años Exp.</div>
                     </div>
-                    <div class="bg-gradient-to-br from-blue-600/20 to-[#0f172a] p-8 rounded-2xl border border-blue-500/30 text-center backdrop-blur-sm">
-                        <div class="text-4xl font-bold text-blue-400 mb-2">4.9</div>
-                        <div class="text-xs text-gray-400 uppercase tracking-widest font-bold">Estrellas Google</div>
+                    <div class="bg-gradient-to-br from-blue-600/20 to-[#0f172a] p-4 md:p-8 rounded-2xl border border-blue-500/30 text-center">
+                        <div class="text-2xl md:text-4xl font-bold text-blue-400 mb-1 md:mb-2">4.9</div>
+                        <div class="text-[10px] md:text-xs text-gray-400 uppercase tracking-widest font-bold">Estrellas Google</div>
                     </div>
-                    <div class="col-span-2 bg-[#0f172a] p-6 rounded-2xl border border-white/10 flex items-center justify-between">
+                    <div class="col-span-2 bg-[#0f172a] p-4 md:p-6 rounded-2xl border border-white/10 flex items-center justify-between">
                         <div class="text-left">
-                            <div class="text-lg font-bold text-white">Stack Tecnológico</div>
-                            <div class="text-xs text-gray-500 mt-1">Laravel • React • Cloudways</div>
+                            <div class="text-sm md:text-lg font-bold text-white">Stack Tecnológico</div>
+                            <div class="text-[10px] md:text-xs text-gray-500 mt-1">Laravel • React • Cloudways</div>
                         </div>
-                        <i data-lucide="cpu" class="text-gray-600 w-8 h-8"></i>
+                        <i data-lucide="cpu" class="text-gray-600 w-6 h-6 md:w-8 md:h-8"></i>
                     </div>
                 </div>
             </div>
@@ -204,49 +218,49 @@
 
         <!-- SLIDE 3: DESARROLLO -->
         <section class="slide" data-bg="bg-[#020617]" data-title="Desarrollo & Infraestructura">
-            <div class="mb-10 text-center">
-                <h2 class="text-3xl md:text-5xl font-bold text-white mb-3">Ingeniería Robusta</h2>
-                <p class="text-xl text-blue-400 font-light">Para inventarios complejos</p>
+            <div class="mb-6 md:mb-10 text-center">
+                <h2 class="text-2xl md:text-5xl font-bold text-white mb-2 md:mb-3">Ingeniería Robusta</h2>
+                <p class="text-sm md:text-xl text-blue-400 font-light">Para inventarios complejos</p>
             </div>
-            <div class="max-w-6xl w-full grid md:grid-cols-2 gap-8">
+            <div class="max-w-6xl w-full grid md:grid-cols-2 gap-4 md:gap-8 pb-8">
                 <!-- Card 1 -->
-                <div class="bg-[#0f172a] p-8 rounded-2xl border border-white/10 hover:border-blue-500 transition-all group relative overflow-hidden flex flex-col h-full">
-                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <i data-lucide="monitor" class="text-blue-500 w-32 h-32"></i>
+                <div class="bg-[#0f172a] p-6 md:p-8 rounded-2xl border border-white/10 hover:border-blue-500 transition-all flex flex-col h-full relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-10">
+                        <i data-lucide="monitor" class="text-blue-500 w-20 h-20 md:w-32 md:h-32"></i>
                     </div>
-                    <div class="flex items-center gap-4 mb-6 relative z-10">
-                        <div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg">
-                            <i data-lucide="code-2" class="w-6 h-6"></i>
+                    <div class="flex items-center gap-4 mb-4 relative z-10">
+                        <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+                            <i data-lucide="code-2" class="w-5 h-5 md:w-6 md:h-6"></i>
                         </div>
-                        <h3 class="text-2xl font-bold text-white">Desarrollo Web</h3>
+                        <h3 class="text-xl md:text-2xl font-bold text-white">Desarrollo Web</h3>
                     </div>
-                    <p class="text-gray-400 mb-6 text-sm leading-relaxed relative z-10">
+                    <p class="text-gray-400 mb-6 text-xs md:text-sm leading-relaxed relative z-10">
                         Soluciones a medida. Sincronización de stock, gestión de leads y escalabilidad total.
                     </p>
                     <div class="flex flex-wrap gap-2 relative z-10 mt-auto">
-                        <span class="px-3 py-1 bg-[#020617] border border-white/10 text-xs text-blue-300 rounded-md">Laravel</span>
-                        <span class="px-3 py-1 bg-[#020617] border border-white/10 text-xs text-blue-300 rounded-md">Filament</span>
-                        <span class="px-3 py-1 bg-[#020617] border border-white/10 text-xs text-blue-300 rounded-md">Python</span>
+                        <span class="px-2 py-1 md:px-3 bg-[#020617] border border-white/10 text-[10px] md:text-xs text-blue-300 rounded-md">Laravel</span>
+                        <span class="px-2 py-1 md:px-3 bg-[#020617] border border-white/10 text-[10px] md:text-xs text-blue-300 rounded-md">Filament</span>
+                        <span class="px-2 py-1 md:px-3 bg-[#020617] border border-white/10 text-[10px] md:text-xs text-blue-300 rounded-md">Python</span>
                     </div>
                 </div>
                 <!-- Card 2 -->
-                <div class="bg-[#0f172a] p-8 rounded-2xl border border-white/10 hover:border-cyan-500 transition-all group relative overflow-hidden flex flex-col h-full">
-                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <i data-lucide="server" class="text-cyan-500 w-32 h-32"></i>
+                <div class="bg-[#0f172a] p-6 md:p-8 rounded-2xl border border-white/10 hover:border-cyan-500 transition-all flex flex-col h-full relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-10">
+                        <i data-lucide="server" class="text-cyan-500 w-20 h-20 md:w-32 md:h-32"></i>
                     </div>
-                    <div class="flex items-center gap-4 mb-6 relative z-10">
-                        <div class="w-12 h-12 bg-cyan-600 rounded-xl flex items-center justify-center text-white shadow-lg">
-                            <i data-lucide="server" class="w-6 h-6"></i>
+                    <div class="flex items-center gap-4 mb-4 relative z-10">
+                        <div class="w-10 h-10 md:w-12 md:h-12 bg-cyan-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+                            <i data-lucide="server" class="w-5 h-5 md:w-6 md:h-6"></i>
                         </div>
-                        <h3 class="text-2xl font-bold text-white">Cloud Hosting</h3>
+                        <h3 class="text-xl md:text-2xl font-bold text-white">Cloud Hosting</h3>
                     </div>
-                    <p class="text-gray-400 mb-6 text-sm leading-relaxed relative z-10">
+                    <p class="text-gray-400 mb-6 text-xs md:text-sm leading-relaxed relative z-10">
                         Infraestructura de élite. Velocidad crítica para SEO y usuarios móviles.
                     </p>
-                    <ul class="space-y-3 relative z-10 mt-auto text-sm text-gray-300">
-                        <li class="flex items-center"><i data-lucide="check-circle-2" class="text-cyan-400 w-4 h-4 mr-2"></i> Cloudways High Performance</li>
-                        <li class="flex items-center"><i data-lucide="check-circle-2" class="text-cyan-400 w-4 h-4 mr-2"></i> cPanel Reseller Independiente</li>
-                        <li class="flex items-center"><i data-lucide="check-circle-2" class="text-cyan-400 w-4 h-4 mr-2"></i> SSL & Backups Diarios</li>
+                    <ul class="space-y-2 md:space-y-3 relative z-10 mt-auto text-xs md:text-sm text-gray-300">
+                        <li class="flex items-center"><i data-lucide="check-circle-2" class="text-cyan-400 w-3 h-3 md:w-4 md:h-4 mr-2"></i> Cloudways High Performance</li>
+                        <li class="flex items-center"><i data-lucide="check-circle-2" class="text-cyan-400 w-3 h-3 md:w-4 md:h-4 mr-2"></i> cPanel Reseller Independiente</li>
+                        <li class="flex items-center"><i data-lucide="check-circle-2" class="text-cyan-400 w-3 h-3 md:w-4 md:h-4 mr-2"></i> SSL & Backups Diarios</li>
                     </ul>
                 </div>
             </div>
@@ -254,103 +268,113 @@
 
         <!-- SLIDE 4: STACK TECNOLÓGICO -->
         <section class="slide" data-bg="bg-[#0f172a]" data-title="Nuestro Stack Tecnológico">
-            <div class="mb-10 text-center">
-                <h2 class="text-3xl md:text-5xl font-bold text-white mb-3">Tecnología de Clase Mundial</h2>
-                <p class="text-xl text-gray-400 font-light">Herramientas robustas para resultados superiores</p>
+            <div class="mb-8 md:mb-10 text-center">
+                <h2 class="text-2xl md:text-5xl font-bold text-white mb-2 md:mb-3">Tecnología de Clase Mundial</h2>
+                <p class="text-sm md:text-xl text-gray-400 font-light">Herramientas robustas para resultados superiores</p>
             </div>
             
-            <div class="max-w-5xl w-full grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
-                <!-- Logos usando DevIcons CDN -->
-                <div class="tech-card group flex flex-col items-center justify-center p-4 rounded-xl bg-[#020617] border border-white/5 hover:border-blue-500/50 hover:bg-white/5 transition-all hover:-translate-y-1">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" class="w-12 h-12 mb-3 filter grayscale group-hover:grayscale-0 transition-all">
-                    <span class="text-xs font-bold text-gray-400 group-hover:text-white">HTML5</span>
+            <div class="max-w-5xl w-full grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-6 pb-8">
+                <!-- Loop Stack Items (Compactados para móvil) -->
+                <!-- HTML -->
+                <div class="tech-card flex flex-col items-center justify-center p-3 md:p-4 rounded-xl bg-[#020617] border border-white/5">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" class="w-8 h-8 md:w-12 md:h-12 mb-2 md:mb-3">
+                    <span class="text-[10px] md:text-xs font-bold text-gray-400">HTML5</span>
                 </div>
-                <div class="tech-card group flex flex-col items-center justify-center p-4 rounded-xl bg-[#020617] border border-white/5 hover:border-blue-500/50 hover:bg-white/5 transition-all hover:-translate-y-1">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" class="w-12 h-12 mb-3 filter grayscale group-hover:grayscale-0 transition-all">
-                    <span class="text-xs font-bold text-gray-400 group-hover:text-white">CSS3</span>
+                <!-- CSS -->
+                <div class="tech-card flex flex-col items-center justify-center p-3 md:p-4 rounded-xl bg-[#020617] border border-white/5">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" class="w-8 h-8 md:w-12 md:h-12 mb-2 md:mb-3">
+                    <span class="text-[10px] md:text-xs font-bold text-gray-400">CSS3</span>
                 </div>
-                <div class="tech-card group flex flex-col items-center justify-center p-4 rounded-xl bg-[#020617] border border-white/5 hover:border-blue-500/50 hover:bg-white/5 transition-all hover:-translate-y-1">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" class="w-12 h-12 mb-3 filter grayscale group-hover:grayscale-0 transition-all">
-                    <span class="text-xs font-bold text-gray-400 group-hover:text-white">JS</span>
+                <!-- JS -->
+                <div class="tech-card flex flex-col items-center justify-center p-3 md:p-4 rounded-xl bg-[#020617] border border-white/5">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" class="w-8 h-8 md:w-12 md:h-12 mb-2 md:mb-3">
+                    <span class="text-[10px] md:text-xs font-bold text-gray-400">JS</span>
                 </div>
-                <div class="tech-card group flex flex-col items-center justify-center p-4 rounded-xl bg-[#020617] border border-white/5 hover:border-blue-500/50 hover:bg-white/5 transition-all hover:-translate-y-1">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" class="w-12 h-12 mb-3 filter grayscale group-hover:grayscale-0 transition-all">
-                    <span class="text-xs font-bold text-gray-400 group-hover:text-white">PYTHON</span>
+                <!-- Python -->
+                <div class="tech-card flex flex-col items-center justify-center p-3 md:p-4 rounded-xl bg-[#020617] border border-white/5">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" class="w-8 h-8 md:w-12 md:h-12 mb-2 md:mb-3">
+                    <span class="text-[10px] md:text-xs font-bold text-gray-400">PYTHON</span>
                 </div>
-                <div class="tech-card group flex flex-col items-center justify-center p-4 rounded-xl bg-[#020617] border border-white/5 hover:border-blue-500/50 hover:bg-white/5 transition-all hover:-translate-y-1">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-original.svg" class="w-12 h-12 mb-3 filter grayscale group-hover:grayscale-0 transition-all">
-                    <span class="text-xs font-bold text-gray-400 group-hover:text-white">LARAVEL</span>
+                <!-- Laravel -->
+                <div class="tech-card flex flex-col items-center justify-center p-3 md:p-4 rounded-xl bg-[#020617] border border-white/5">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-original.svg" class="w-8 h-8 md:w-12 md:h-12 mb-2 md:mb-3">
+                    <span class="text-[10px] md:text-xs font-bold text-gray-400">LARAVEL</span>
                 </div>
-                <!-- Custom SVG for Filament -->
-                <div class="tech-card group flex flex-col items-center justify-center p-4 rounded-xl bg-[#020617] border border-white/5 hover:border-amber-500/50 hover:bg-white/5 transition-all hover:-translate-y-1">
-                     <i data-lucide="layout-template" class="w-12 h-12 mb-3 text-amber-500"></i>
-                    <span class="text-xs font-bold text-gray-400 group-hover:text-amber-500">FILAMENT</span>
+                <!-- Filament -->
+                <div class="tech-card flex flex-col items-center justify-center p-3 md:p-4 rounded-xl bg-[#020617] border border-white/5">
+                     <i data-lucide="layout-template" class="w-8 h-8 md:w-12 md:h-12 mb-2 md:mb-3 text-amber-500"></i>
+                    <span class="text-[10px] md:text-xs font-bold text-amber-500">FILAMENT</span>
                 </div>
-                <!-- Custom SVG for Blade -->
-                <div class="tech-card group flex flex-col items-center justify-center p-4 rounded-xl bg-[#020617] border border-white/5 hover:border-red-500/50 hover:bg-white/5 transition-all hover:-translate-y-1">
-                    <i data-lucide="file-code-2" class="w-12 h-12 mb-3 text-red-500"></i>
-                   <span class="text-xs font-bold text-gray-400 group-hover:text-red-500">BLADE</span>
+                <!-- Blade -->
+                <div class="tech-card flex flex-col items-center justify-center p-3 md:p-4 rounded-xl bg-[#020617] border border-white/5">
+                    <i data-lucide="file-code-2" class="w-8 h-8 md:w-12 md:h-12 mb-2 md:mb-3 text-red-500"></i>
+                   <span class="text-[10px] md:text-xs font-bold text-red-500">BLADE</span>
                </div>
-                <div class="tech-card group flex flex-col items-center justify-center p-4 rounded-xl bg-[#020617] border border-white/5 hover:border-blue-500/50 hover:bg-white/5 transition-all hover:-translate-y-1">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vitejs/vitejs-original.svg" class="w-12 h-12 mb-3 filter grayscale group-hover:grayscale-0 transition-all">
-                    <span class="text-xs font-bold text-gray-400 group-hover:text-white">VITE</span>
+                <!-- Vite -->
+                <div class="tech-card flex flex-col items-center justify-center p-3 md:p-4 rounded-xl bg-[#020617] border border-white/5">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vitejs/vitejs-original.svg" class="w-8 h-8 md:w-12 md:h-12 mb-2 md:mb-3">
+                    <span class="text-[10px] md:text-xs font-bold text-gray-400">VITE</span>
                 </div>
-                <div class="tech-card group flex flex-col items-center justify-center p-4 rounded-xl bg-[#020617] border border-white/5 hover:border-purple-500/50 hover:bg-white/5 transition-all hover:-translate-y-1">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg" class="w-12 h-12 mb-3 filter grayscale group-hover:grayscale-0 transition-all">
-                    <span class="text-xs font-bold text-gray-400 group-hover:text-white">BOOTSTRAP</span>
+                <!-- Bootstrap -->
+                <div class="tech-card flex flex-col items-center justify-center p-3 md:p-4 rounded-xl bg-[#020617] border border-white/5">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg" class="w-8 h-8 md:w-12 md:h-12 mb-2 md:mb-3">
+                    <span class="text-[10px] md:text-xs font-bold text-gray-400">BOOTSTRAP</span>
                 </div>
-                <div class="tech-card group flex flex-col items-center justify-center p-4 rounded-xl bg-[#020617] border border-white/5 hover:border-blue-500/50 hover:bg-white/5 transition-all hover:-translate-y-1">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/wordpress/wordpress-plain.svg" class="w-12 h-12 mb-3 filter grayscale group-hover:grayscale-0 transition-all">
-                    <span class="text-xs font-bold text-gray-400 group-hover:text-white">WORDPRESS</span>
+                <!-- Wordpress -->
+                <div class="tech-card flex flex-col items-center justify-center p-3 md:p-4 rounded-xl bg-[#020617] border border-white/5">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/wordpress/wordpress-plain.svg" class="w-8 h-8 md:w-12 md:h-12 mb-2 md:mb-3">
+                    <span class="text-[10px] md:text-xs font-bold text-gray-400">WORDPRESS</span>
                 </div>
-                 <div class="tech-card group flex flex-col items-center justify-center p-4 rounded-xl bg-[#020617] border border-white/5 hover:border-purple-500/50 hover:bg-white/5 transition-all hover:-translate-y-1">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/woocommerce/woocommerce-original.svg" class="w-12 h-12 mb-3 filter grayscale group-hover:grayscale-0 transition-all">
-                    <span class="text-xs font-bold text-gray-400 group-hover:text-white">WOOCOMMERCE</span>
+                 <!-- Woocommerce -->
+                 <div class="tech-card flex flex-col items-center justify-center p-3 md:p-4 rounded-xl bg-[#020617] border border-white/5">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/woocommerce/woocommerce-original.svg" class="w-8 h-8 md:w-12 md:h-12 mb-2 md:mb-3">
+                    <span class="text-[10px] md:text-xs font-bold text-gray-400">WOOCOMMERCE</span>
                 </div>
-                <div class="tech-card group flex flex-col items-center justify-center p-4 rounded-xl bg-[#020617] border border-white/5 hover:border-blue-500/50 hover:bg-white/5 transition-all hover:-translate-y-1">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg" class="w-12 h-12 mb-3 filter grayscale group-hover:grayscale-0 transition-all">
-                    <span class="text-xs font-bold text-gray-400 group-hover:text-white">PHP</span>
+                <!-- PHP -->
+                <div class="tech-card flex flex-col items-center justify-center p-3 md:p-4 rounded-xl bg-[#020617] border border-white/5">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg" class="w-8 h-8 md:w-12 md:h-12 mb-2 md:mb-3">
+                    <span class="text-[10px] md:text-xs font-bold text-gray-400">PHP</span>
                 </div>
             </div>
         </section>
 
         <!-- SLIDE 5: MARKETING -->
         <section class="slide" data-bg="bg-[#0b1221]" data-title="Tráfico & Posicionamiento">
-            <div class="max-w-6xl w-full flex flex-col justify-center space-y-8">
-                <div class="mb-8 text-center">
-                    <h2 class="text-3xl md:text-5xl font-bold text-white mb-3">Estrategia de Tráfico</h2>
-                    <p class="text-xl text-green-400 font-light">Dominio de la búsqueda local</p>
+            <div class="max-w-6xl w-full flex flex-col justify-center space-y-6 md:space-y-8">
+                <div class="mb-4 md:mb-8 text-center">
+                    <h2 class="text-3xl md:text-5xl font-bold text-white mb-2 md:mb-3">Estrategia de Tráfico</h2>
+                    <p class="text-lg md:text-xl text-green-400 font-light">Dominio de la búsqueda local</p>
                 </div>
-                <div class="grid md:grid-cols-2 gap-6">
+                <div class="grid md:grid-cols-2 gap-4 md:gap-6">
                     <!-- SEO -->
-                    <div class="group p-8 rounded-2xl bg-[#0f172a] border border-white/10 hover:border-green-500/50 transition-all shadow-lg relative overflow-hidden">
+                    <div class="group p-6 md:p-8 rounded-2xl bg-[#0f172a] border border-white/10 hover:border-green-500/50 transition-all">
                         <div class="flex items-center mb-4 relative z-10">
                             <div class="p-2 bg-green-500/10 rounded-lg mr-3">
-                                <i data-lucide="rocket" class="text-green-500 w-6 h-6"></i>
+                                <i data-lucide="rocket" class="text-green-500 w-5 h-5 md:w-6 md:h-6"></i>
                             </div>
-                            <h3 class="text-xl font-bold text-white">SEO Técnico</h3>
+                            <h3 class="text-lg md:text-xl font-bold text-white">SEO Técnico</h3>
                         </div>
-                        <p class="text-gray-400 text-sm mb-4 relative z-10">
+                        <p class="text-gray-400 text-xs md:text-sm mb-4 relative z-10">
                             Aparecer primero cuando alguien busca "Toyota La Serena" o "Camionetas usadas".
                         </p>
-                        <div class="bg-[#020617]/50 p-3 rounded border border-white/5 text-xs font-mono text-green-400 relative z-10">
+                        <div class="bg-[#020617]/50 p-3 rounded border border-white/5 text-[10px] md:text-xs font-mono text-green-400 relative z-10">
                             > Core Web Vitals<br>
                             > Indexación Local<br>
                             > Estrategia de Contenidos
                         </div>
                     </div>
                     <!-- ADS -->
-                    <div class="group p-8 rounded-2xl bg-[#0f172a] border border-white/10 hover:border-yellow-500/50 transition-all shadow-lg relative overflow-hidden">
+                    <div class="group p-6 md:p-8 rounded-2xl bg-[#0f172a] border border-white/10 hover:border-yellow-500/50 transition-all">
                         <div class="flex items-center mb-4 relative z-10">
                             <div class="p-2 bg-yellow-500/10 rounded-lg mr-3">
-                                <i data-lucide="bar-chart-3" class="text-yellow-500 w-6 h-6"></i>
+                                <i data-lucide="bar-chart-3" class="text-yellow-500 w-5 h-5 md:w-6 md:h-6"></i>
                             </div>
-                            <h3 class="text-xl font-bold text-white">Google & Meta Ads</h3>
+                            <h3 class="text-lg md:text-xl font-bold text-white">Google & Meta Ads</h3>
                         </div>
-                        <p class="text-gray-400 text-sm mb-4 relative z-10">
+                        <p class="text-gray-400 text-xs md:text-sm mb-4 relative z-10">
                             Campañas de pago con ROI maximizado. Tráfico con intención de compra.
                         </p>
-                        <div class="bg-[#020617]/50 p-3 rounded border border-white/5 text-xs font-mono text-yellow-400 relative z-10">
+                        <div class="bg-[#020617]/50 p-3 rounded border border-white/5 text-[10px] md:text-xs font-mono text-yellow-400 relative z-10">
                             > Red de Búsqueda Google<br>
                             > Catálogo Dinámico (IG)<br>
                             > Remarketing Inteligente
@@ -362,19 +386,19 @@
 
         <!-- SLIDE 6: IA INNOVACIÓN -->
         <section class="slide" data-bg="bg-[#0f172a]" data-title="Innovación: IA">
-            <div class="max-w-6xl w-full grid md:grid-cols-2 gap-10 items-center">
-                <div class="space-y-6">
+            <div class="max-w-6xl w-full grid md:grid-cols-2 gap-8 md:gap-10 items-center">
+                <div class="space-y-4 md:space-y-6">
                     <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-bold uppercase tracking-wider mb-2">
                         <i data-lucide="bot" class="w-4 h-4"></i> Next Gen Tech
                     </div>
-                    <h2 class="text-3xl font-bold text-white">Agentes Virtuales & Automatización</h2>
-                    <p class="text-gray-300 leading-relaxed font-light">
+                    <h2 class="text-2xl md:text-3xl font-bold text-white">Agentes Virtuales & Automatización</h2>
+                    <p class="text-sm md:text-base text-gray-300 leading-relaxed font-light">
                         Integramos Inteligencia Artificial para atención 24/7. Filtrar curiosos de compradores reales nunca fue tan eficiente.
                     </p>
-                    <ul class="space-y-4 pt-4">
+                    <ul class="space-y-3 md:space-y-4 pt-2 md:pt-4">
                         <li class="flex items-start group">
                             <div class="bg-purple-600/20 p-2 rounded mr-3">
-                                <i data-lucide="zap" class="text-purple-400 w-5 h-5"></i>
+                                <i data-lucide="zap" class="text-purple-400 w-4 h-4 md:w-5 md:h-5"></i>
                             </div>
                             <div>
                                 <h4 class="text-white font-bold text-sm">Automatizaciones con MAKE</h4>
@@ -383,7 +407,7 @@
                         </li>
                         <li class="flex items-start group">
                             <div class="bg-purple-600/20 p-2 rounded mr-3">
-                                <i data-lucide="bot" class="text-purple-400 w-5 h-5"></i>
+                                <i data-lucide="bot" class="text-purple-400 w-4 h-4 md:w-5 md:h-5"></i>
                             </div>
                             <div>
                                 <h4 class="text-white font-bold text-sm">Agentes IA</h4>
@@ -396,7 +420,7 @@
                 <div class="w-full max-w-sm mx-auto">
                     <div class="bg-[#020617] border border-white/10 rounded-2xl p-4 shadow-2xl relative overflow-hidden ring-1 ring-purple-500/30">
                         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-blue-500"></div>
-                        <div class="space-y-4 text-xs font-medium">
+                        <div class="space-y-3 md:space-y-4 text-xs font-medium">
                             <div class="flex justify-end">
                                 <div class="bg-blue-600 text-white p-3 rounded-2xl rounded-tr-sm max-w-[85%] shadow-lg">
                                     ¡Hola! Soy el asistente virtual. ¿Buscas nuevos o usados? 🚗
@@ -414,7 +438,7 @@
                             </div>
                             <div class="flex justify-center pt-2">
                                 <span class="px-2 py-1 rounded bg-purple-500/10 text-[10px] text-purple-400 uppercase tracking-wider border border-purple-500/20">
-                                    Lead Calificado Automáticamente
+                                    Lead Calificado
                                 </span>
                             </div>
                         </div>
@@ -425,42 +449,50 @@
 
         <!-- SLIDE 7: CRONOGRAMA DE TRABAJO -->
         <section class="slide" data-bg="bg-[#0b1221]" data-title="Plan de Trabajo">
-            <div class="max-w-5xl w-full text-center space-y-12 animate-slide-up">
-                <div class="mb-8">
-                    <h2 class="text-3xl md:text-5xl font-bold text-white mb-4">Cronograma de Ejecución</h2>
-                    <p class="text-xl text-blue-400">Implementación completa en 4 a 5 semanas</p>
+            <div class="max-w-5xl w-full text-center space-y-8 md:space-y-12 animate-slide-up">
+                <div class="mb-4 md:mb-8">
+                    <h2 class="text-3xl md:text-5xl font-bold text-white mb-2 md:mb-4">Cronograma de Ejecución</h2>
+                    <p class="text-lg md:text-xl text-blue-400">Implementación completa en 4 a 5 semanas</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-0 relative">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-0 relative text-left md:text-center pb-8">
                     <!-- Línea conectora (Desktop) -->
                     <div class="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-gradient-to-r from-blue-900 to-cyan-900 -z-10 -translate-y-1/2 rounded-full"></div>
 
                     <!-- Etapa 1 -->
-                    <div class="bg-[#0f172a] md:bg-transparent p-6 rounded-2xl border border-white/5 md:border-0 relative group">
-                        <div class="w-12 h-12 mx-auto bg-blue-600 rounded-full flex items-center justify-center font-bold text-white mb-4 border-4 border-[#020617] relative z-10 group-hover:scale-110 transition-transform">1</div>
-                        <h4 class="text-white font-bold text-lg mb-2">Semana 1</h4>
-                        <p class="text-sm text-gray-400">Configuración Cloud, Bases de Datos y UX/UI.</p>
+                    <div class="bg-[#0f172a] md:bg-transparent p-4 md:p-6 rounded-2xl border border-white/5 md:border-0 relative flex md:block items-center gap-4">
+                        <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-600 rounded-full flex-shrink-0 flex items-center justify-center font-bold text-white border-4 border-[#020617] relative z-10">1</div>
+                        <div>
+                            <h4 class="text-white font-bold text-base md:text-lg">Semana 1</h4>
+                            <p class="text-xs md:text-sm text-gray-400">Configuración Cloud, Bases de Datos y UX/UI.</p>
+                        </div>
                     </div>
 
                     <!-- Etapa 2 -->
-                    <div class="bg-[#0f172a] md:bg-transparent p-6 rounded-2xl border border-white/5 md:border-0 relative group">
-                        <div class="w-12 h-12 mx-auto bg-blue-500 rounded-full flex items-center justify-center font-bold text-white mb-4 border-4 border-[#020617] relative z-10 group-hover:scale-110 transition-transform">2</div>
-                        <h4 class="text-white font-bold text-lg mb-2">Semana 2-3</h4>
-                        <p class="text-sm text-gray-400">Desarrollo Backend, Integración APIs y Agente IA.</p>
+                    <div class="bg-[#0f172a] md:bg-transparent p-4 md:p-6 rounded-2xl border border-white/5 md:border-0 relative flex md:block items-center gap-4">
+                        <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-500 rounded-full flex-shrink-0 flex items-center justify-center font-bold text-white border-4 border-[#020617] relative z-10">2</div>
+                        <div>
+                            <h4 class="text-white font-bold text-base md:text-lg">Semana 2-3</h4>
+                            <p class="text-xs md:text-sm text-gray-400">Backend, APIs y Agente IA.</p>
+                        </div>
                     </div>
 
                     <!-- Etapa 3 -->
-                    <div class="bg-[#0f172a] md:bg-transparent p-6 rounded-2xl border border-white/5 md:border-0 relative group">
-                        <div class="w-12 h-12 mx-auto bg-cyan-500 rounded-full flex items-center justify-center font-bold text-white mb-4 border-4 border-[#020617] relative z-10 group-hover:scale-110 transition-transform">3</div>
-                        <h4 class="text-white font-bold text-lg mb-2">Semana 4</h4>
-                        <p class="text-sm text-gray-400">Carga de Inventario, Pruebas QA y Ajustes.</p>
+                    <div class="bg-[#0f172a] md:bg-transparent p-4 md:p-6 rounded-2xl border border-white/5 md:border-0 relative flex md:block items-center gap-4">
+                        <div class="w-10 h-10 md:w-12 md:h-12 bg-cyan-500 rounded-full flex-shrink-0 flex items-center justify-center font-bold text-white border-4 border-[#020617] relative z-10">3</div>
+                        <div>
+                            <h4 class="text-white font-bold text-base md:text-lg">Semana 4</h4>
+                            <p class="text-xs md:text-sm text-gray-400">Carga Inventario, QA y Ajustes.</p>
+                        </div>
                     </div>
 
                     <!-- Etapa 4 -->
-                    <div class="bg-[#0f172a] md:bg-transparent p-6 rounded-2xl border border-white/5 md:border-0 relative group">
-                        <div class="w-12 h-12 mx-auto bg-green-500 rounded-full flex items-center justify-center font-bold text-white mb-4 border-4 border-[#020617] relative z-10 group-hover:scale-110 transition-transform">4</div>
-                        <h4 class="text-white font-bold text-lg mb-2">Semana 5</h4>
-                        <p class="text-sm text-gray-400">Lanzamiento Oficial y Capacitación Equipo.</p>
+                    <div class="bg-[#0f172a] md:bg-transparent p-4 md:p-6 rounded-2xl border border-white/5 md:border-0 relative flex md:block items-center gap-4">
+                        <div class="w-10 h-10 md:w-12 md:h-12 bg-green-500 rounded-full flex-shrink-0 flex items-center justify-center font-bold text-white border-4 border-[#020617] relative z-10">4</div>
+                        <div>
+                            <h4 class="text-white font-bold text-base md:text-lg">Semana 5</h4>
+                            <p class="text-xs md:text-sm text-gray-400">Lanzamiento y Capacitación.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -468,69 +500,69 @@
 
         <!-- SLIDE 8: PROPUESTA ECONÓMICA -->
         <section class="slide" data-bg="bg-[#020617]" data-title="Inversión y Costos">
-            <div class="max-w-5xl w-full grid md:grid-cols-3 gap-8 items-stretch animate-slide-up">
+            <div class="max-w-5xl w-full grid md:grid-cols-3 gap-6 md:gap-8 items-stretch animate-slide-up pb-10">
                 
                 <!-- Columna Izquierda: Valor Principal -->
-                <div class="md:col-span-2 space-y-6 text-left">
-                    <h2 class="text-4xl md:text-5xl font-bold text-white">Inversión <br>Proyecto</h2>
-                    <p class="text-gray-400 text-lg">
+                <div class="md:col-span-2 space-y-4 md:space-y-6 text-left">
+                    <h2 class="text-3xl md:text-5xl font-bold text-white">Inversión <br>Proyecto</h2>
+                    <p class="text-gray-400 text-sm md:text-lg">
                         Solución llave en mano para digitalizar Camal Musalem.
                     </p>
                     
-                    <div class="bg-gradient-to-br from-blue-900/40 to-[#0f172a] p-8 rounded-3xl border border-blue-500/30 relative overflow-hidden">
+                    <div class="bg-gradient-to-br from-blue-900/40 to-[#0f172a] p-6 md:p-8 rounded-3xl border border-blue-500/30 relative overflow-hidden">
                         <div class="absolute top-0 right-0 p-6 opacity-10">
-                            <i data-lucide="tag" class="w-32 h-32 text-white"></i>
+                            <i data-lucide="tag" class="w-24 h-24 md:w-32 md:h-32 text-white"></i>
                         </div>
-                        <div class="text-sm text-blue-300 font-bold uppercase tracking-widest mb-2">Costo Base</div>
-                        <div class="flex items-baseline gap-2 mb-6">
-                            <span class="text-5xl md:text-6xl font-bold text-white">$500.000</span>
-                            <span class="text-xl text-gray-400 font-medium">+ IVA</span>
+                        <div class="text-xs md:text-sm text-blue-300 font-bold uppercase tracking-widest mb-2">Costo Base</div>
+                        <div class="flex items-baseline gap-2 mb-4 md:mb-6">
+                            <span class="text-4xl md:text-6xl font-bold text-white">$500.000</span>
+                            <span class="text-lg md:text-xl text-gray-400 font-medium">+ IVA</span>
                         </div>
                         
-                        <div class="space-y-4">
+                        <div class="space-y-3 md:space-y-4 text-sm md:text-base">
                             <div class="flex items-start gap-3">
                                 <i data-lucide="check-circle-2" class="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5"></i>
-                                <span class="text-gray-200"><strong>Desarrollo Web Completo:</strong> Nuevos, Usados, Repuestos y Taller.</span>
+                                <span class="text-gray-200"><strong>Desarrollo Web Completo:</strong> Nuevos, Usados, Taller.</span>
                             </div>
                             <div class="flex items-start gap-3">
                                 <i data-lucide="check-circle-2" class="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5"></i>
-                                <span class="text-gray-200"><strong>Agente WhatsApp (Make):</strong> Configuración flujo atención 24/7.</span>
+                                <span class="text-gray-200"><strong>Agente WhatsApp (Make):</strong> Flujo atención 24/7.</span>
                             </div>
                             <div class="flex items-start gap-3">
                                 <i data-lucide="check-circle-2" class="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5"></i>
-                                <span class="text-gray-200"><strong>Conexión API:</strong> Integración Salesforce y herramientas externas.</span>
+                                <span class="text-gray-200"><strong>Conexión API:</strong> Integración Salesforce.</span>
                             </div>
                             <div class="flex items-start gap-3">
                                 <i data-lucide="check-circle-2" class="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5"></i>
-                                <span class="text-gray-200"><strong>Garantía Técnica:</strong> 90 días de soporte post-lanzamiento.</span>
+                                <span class="text-gray-200"><strong>Garantía Técnica:</strong> 90 días soporte.</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Columna Derecha: Adicionales y Soporte -->
-                <div class="space-y-6 flex flex-col">
+                <div class="space-y-4 md:space-y-6 flex flex-col">
                     <!-- Soporte Mensual -->
-                    <div class="glass-panel p-6 rounded-2xl flex-1 border-l-4 border-l-blue-500">
-                        <h3 class="font-bold text-white mb-2 flex items-center gap-2">
-                            <i data-lucide="shield-check" class="text-blue-500 w-5 h-5"></i> Soporte Mensual
+                    <div class="glass-panel p-5 md:p-6 rounded-2xl flex-1 border-l-4 border-l-blue-500">
+                        <h3 class="font-bold text-white mb-2 flex items-center gap-2 text-sm md:text-base">
+                            <i data-lucide="shield-check" class="text-blue-500 w-4 h-4 md:w-5 md:h-5"></i> Soporte Mensual
                         </h3>
-                        <div class="text-2xl font-bold text-white mb-2">$80.000 <span class="text-xs text-gray-400 font-normal">+ IVA</span></div>
-                        <p class="text-xs text-gray-400 mb-4">Actualizaciones de seguridad y soporte técnico prioritario.</p>
+                        <div class="text-xl md:text-2xl font-bold text-white mb-2">$80.000 <span class="text-xs text-gray-400 font-normal">+ IVA</span></div>
+                        <p class="text-xs text-gray-400">Actualizaciones de seguridad y soporte técnico prioritario.</p>
                     </div>
 
                     <!-- Costos Operativos -->
-                    <div class="glass-panel p-6 rounded-2xl flex-1 border-l-4 border-l-yellow-500">
-                        <h3 class="font-bold text-white mb-2 flex items-center gap-2">
-                            <i data-lucide="info" class="text-yellow-500 w-5 h-5"></i> Costos Operativos
+                    <div class="glass-panel p-5 md:p-6 rounded-2xl flex-1 border-l-4 border-l-yellow-500">
+                        <h3 class="font-bold text-white mb-2 flex items-center gap-2 text-sm md:text-base">
+                            <i data-lucide="info" class="text-yellow-500 w-4 h-4 md:w-5 md:h-5"></i> Costos Operativos
                         </h3>
-                        <p class="text-xs text-gray-400 mb-3">
-                            Plataformas externas (Pago directo a proveedor, económico):
+                        <p class="text-xs text-gray-400 mb-2">
+                            Pago directo a proveedor:
                         </p>
-                        <ul class="text-xs space-y-2 text-gray-300">
-                            <li class="flex items-center gap-2"><div class="w-1 h-1 bg-yellow-500 rounded-full"></div> Make.com (Automatización)</li>
-                            <li class="flex items-center gap-2"><div class="w-1 h-1 bg-yellow-500 rounded-full"></div> OpenAI / Gemini (IA)</li>
-                            <li class="flex items-center gap-2"><div class="w-1 h-1 bg-yellow-500 rounded-full"></div> Meta API (WhatsApp)</li>
+                        <ul class="text-xs space-y-1 text-gray-300">
+                            <li>• Make.com (Automatización)</li>
+                            <li>• OpenAI / Gemini (IA)</li>
+                            <li>• Meta API (WhatsApp)</li>
                         </ul>
                     </div>
                 </div>
@@ -539,24 +571,24 @@
 
         <!-- SLIDE 9: CIERRE (FINAL CON LOGO MUSALEM) -->
         <section class="slide" data-bg="bg-[#020617]" data-title="Próximos Pasos">
-            <div class="max-w-4xl w-full text-center space-y-12 z-10 animate-fade-in">
+            <div class="max-w-4xl w-full text-center space-y-8 md:space-y-12 z-10 animate-fade-in">
                 <div class="max-w-3xl mx-auto">
-                    <h2 class="text-4xl md:text-6xl font-bold text-white mb-6">Listos para Escalar</h2>
-                    <p class="text-gray-400 text-lg font-light">
+                    <h2 class="text-3xl md:text-6xl font-bold text-white mb-4 md:mb-6">Listos para Escalar</h2>
+                    <p class="text-gray-400 text-base md:text-lg font-light px-4">
                         SRWeb combina <span class="text-blue-400 font-bold">excelencia técnica</span> con <span class="text-cyan-400 font-bold">visión comercial</span>.
                     </p>
                 </div>
 
-                <div class="pt-4 flex flex-col items-center gap-10">
+                <div class="pt-4 flex flex-col items-center gap-8 md:gap-10">
                     
                     <!-- Información de Contacto -->
-                    <div class="flex flex-col md:flex-row items-center justify-center gap-8">
-                        <a href="mailto:contacto@srweb.cl" class="flex items-center gap-3 text-xl text-white hover:text-blue-400 transition-colors">
-                            <div class="p-3 bg-white/5 rounded-full border border-white/10"><i data-lucide="mail" class="w-6 h-6 text-blue-500"></i></div>
+                    <div class="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8">
+                        <a href="mailto:contacto@srweb.cl" class="flex items-center gap-3 text-lg md:text-xl text-white hover:text-blue-400 transition-colors">
+                            <div class="p-3 bg-white/5 rounded-full border border-white/10"><i data-lucide="mail" class="w-5 h-5 md:w-6 md:h-6 text-blue-500"></i></div>
                             contacto@srweb.cl
                         </a>
-                        <a href="https://wa.me/56953810178" target="_blank" class="flex items-center gap-3 text-xl text-white hover:text-green-400 transition-colors">
-                            <div class="p-3 bg-white/5 rounded-full border border-white/10"><i data-lucide="phone" class="w-6 h-6 text-green-500"></i></div>
+                        <a href="https://wa.me/56953810178" target="_blank" class="flex items-center gap-3 text-lg md:text-xl text-white hover:text-green-400 transition-colors">
+                            <div class="p-3 bg-white/5 rounded-full border border-white/10"><i data-lucide="phone" class="w-5 h-5 md:w-6 md:h-6 text-green-500"></i></div>
                             +56 9 5381 0178
                         </a>
                     </div>
@@ -564,13 +596,13 @@
                     <!-- Logo Musalem Grande -->
                     <div class="mt-8 flex flex-col items-center gap-4">
                         <span class="text-xs uppercase tracking-widest text-gray-500">Propuesta Preparada Para</span>
-                        <img src="musalem-toyota.jpg" alt="Musalem Toyota" class="h-24 md:h-32 w-auto object-contain rounded-xl bg-white p-4 shadow-2xl shadow-blue-900/20 hover:scale-105 transition-transform duration-500">
+                        <img src="musalem-toyota.jpg" alt="Musalem Toyota" class="h-20 md:h-32 w-auto object-contain rounded-xl bg-white p-4 shadow-2xl shadow-blue-900/20 hover:scale-105 transition-transform duration-500">
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- CONTROLES -->
+        <!-- CONTROLES (Solo Desktop) -->
         <div class="absolute bottom-8 right-8 hidden md:flex space-x-4 z-50">
             <button onclick="prevSlide()" class="p-3 rounded-full bg-[#0f172a] hover:bg-white/10 text-white transition-colors border border-white/10 backdrop-blur-sm group">
                 <i data-lucide="chevron-left" class="w-6 h-6"></i>
@@ -588,7 +620,6 @@
     </main>
 
     <script>
-        // Inicializar Iconos Lucide
         lucide.createIcons();
 
         let currentSlide = 0;
@@ -598,29 +629,27 @@
         const headerSubtitle = document.getElementById('header-subtitle');
 
         function updateSlide() {
-            // Actualizar visibilidad de slides
             slides.forEach((slide, index) => {
                 if (index === currentSlide) {
                     slide.classList.add('active');
-                    
-                    // Actualizar fondo body segun data-bg del slide
                     const bgClass = slide.getAttribute('data-bg');
-                    bodyBg.className = bgClass; // Resetea clases y pone la nueva
+                    bodyBg.className = bgClass;
                     
-                    // Actualizar subtítulo
                     const title = slide.getAttribute('data-title');
                     if(currentSlide === 0) {
                          headerSubtitle.innerText = 'Propuesta Comercial - Musalem Toyota';
                     } else {
                         headerSubtitle.innerText = title;
                     }
+                    
+                    // Reset scroll al cambiar slide
+                    slide.scrollTop = 0;
 
                 } else {
                     slide.classList.remove('active');
                 }
             });
 
-            // Actualizar barra de progreso
             const progress = ((currentSlide + 1) / slides.length) * 100;
             progressBar.style.width = `${progress}%`;
         }
@@ -635,29 +664,27 @@
             updateSlide();
         }
 
-        // Navegación con teclado
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowRight') nextSlide();
             if (e.key === 'ArrowLeft') prevSlide();
         });
 
-        // Touch events for mobile swipe
+        // SWIPE LOGIC
         let touchStartX = 0;
         let touchEndX = 0;
         
-        const mainContainer = document.getElementById('main-container');
-
-        mainContainer.addEventListener('touchstart', e => {
+        // Usamos document para atrapar el swipe en cualquier lado
+        document.addEventListener('touchstart', e => {
             touchStartX = e.changedTouches[0].screenX;
-        }, {passive: false}); // passive: false permite preventDefault si fuera necesario, aunque touch-action: none ya maneja esto.
+        }, {passive: false});
 
-        mainContainer.addEventListener('touchend', e => {
+        document.addEventListener('touchend', e => {
             touchEndX = e.changedTouches[0].screenX;
             handleSwipe();
         }, {passive: false});
 
         function handleSwipe() {
-            const threshold = 30; // Umbral reducido para mejor respuesta
+            const threshold = 30;
             if (touchEndX < touchStartX - threshold) {
                 nextSlide();
             }
@@ -666,7 +693,6 @@
             }
         }
 
-        // Iniciar
         updateSlide();
     </script>
 </body>
